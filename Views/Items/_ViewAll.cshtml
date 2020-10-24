@@ -1,0 +1,51 @@
+﻿@model IEnumerable<Item>
+
+<h1 class="text-center"><i class="fas fa-box-open text-success"></i> All Items</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ItemName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ItemDesc)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Quantity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateTimeAdded)
+            </th>
+            <th>
+                <a onclick="showInPopup('@Url.Action("AddOrEdit", "Items", null, Context.Request.Scheme)', 'New Item')" class="btn btn-success text-white"><i class="fas fa-plus"></i> New Item</a>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ItemName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ItemDesc)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Quantity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateTimeAdded)
+            </td>
+            <td>
+                <div>
+                    <a onclick="showInPopup('@Url.Action("AddOrEdit", "Items", new { id = item.ItemId },  Context.Request.Scheme)', 'Update Item')" class="btn btn-info text-white"><i class="fas fa-edit"></i> Edit</a>
+                </div>
+                <form asp-action="Delete" asp-route-id="@item.ItemId" onsubmit="return jQueryAjaxDelete(this)" class="d-inline">
+                    <input type="submit" value="Delete" class="btn btn-danger" />
+                </form>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
