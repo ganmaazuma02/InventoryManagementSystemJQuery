@@ -64,12 +64,21 @@ function onSelectionChanged() {
         selectedRows.length === 1 ? selectedRows[0].itemName : '';
 }
 
+function onFilterTextBoxChanged() {
+    gridOptions.api.setQuickFilter(document.getElementById('gridQuickFilter').value);
+}
+
+function onPageSizeChanged() {
+    var value = document.getElementById('page-size').value;
+    gridOptions.api.paginationSetPageSize(Number(value));
+}
+
 // setup the grid after the page has finished loading
 document.addEventListener('DOMContentLoaded', function () {
 
     let gridDiv = document.querySelector('#myGrid');
     new agGrid.Grid(gridDiv, gridOptions);
-
+    gridOptions.api.paginationSetPageSize(10);
     loadItemData();
 
 });
