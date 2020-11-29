@@ -15,5 +15,6 @@ namespace InventoryManagementSystemJQuery
         }
 
         public DbSet<Item> Items { get; set; }
+        public DbSet<Location> Locations { get; set; }
     }
 }

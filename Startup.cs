@@ -53,7 +53,7 @@ namespace InventoryManagementSystemJQuery
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=ItemsApiStyle}/{action=Index}/{id?}");
+                    pattern: "{controller=Items}/{action=Index}/{id?}");
             });
         }
     }

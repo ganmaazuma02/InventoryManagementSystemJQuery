@@ -1,7 +1,114 @@
-﻿@model IEnumerable<Item>
-
-@{ ViewData["Title"] = "Index"; }
-
-<div id="view-all">
-    @await Html.PartialAsync("_ViewAll", Model) 
+﻿<div class="row">
+    <div class="col-md-12">
+        <button class="btn btn-primary" data-toggle="modal" id="btnOpenAddItemModal">Add Item</button>
+        <div style="height: 540px; width: 100%" id="myGrid" class="ag-theme-alpine"></div>
+    </div>
 </div>
+
+<div id="notiToast" data-delay="2000" class="toast" style="position:absolute; top: 50px; right: 100px;">
+    <div class="toast-header">
+        <strong class="mr-auto" id="toastTitle"></strong>
+        <button id="btnCloseModal" type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>
+    </div>
+    <div class="toast-body" id="toastContent">
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="addItemModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <form>
+                            <div class="text-danger"></div>
+                            <input type="hidden" id="itemId" />
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <label class="control-label">Item Name</label>
+                                        <div class="input-group">
+                                            <input id="itemName" class="form-control" />
+                                        </div>
+                                        <span id="itemNameErr" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="control-label">Quantity</label>
+                                        <div class="input-group">
+                                            <input type="number" id="itemQuantity" class="form-control" />
+                                        </div>
+                                        <span id="itemQuantityErr" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="control-label">Item Description</label>
+                                        <div class="input-group">
+                                            <textarea id="itemDesc" class="form-control" ></textarea>
+                                        </div>
+                                        <span id="itemDescErr" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="control-label">Location Name</label>
+                                        <select class="form-control" id="locationSelect">
+                                            <option value="id">Location Name</option>
+                                            <option value="1">2</option>
+                                            <option value="1">3</option>
+                                            <option value="1">4</option>
+                                            <option value="1">5</option>
+                                        </select>
+                                        <span id="itemLocationErr" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnAddItem" type="button" class="btn btn-primary"></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteItemModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Delete Item</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="deleteItemId" />
+                Are you sure you want to delete this item?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                <button type="button" id="btnDeleteItem" class="btn btn-primary" >Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/js/items.js"></script>
+}

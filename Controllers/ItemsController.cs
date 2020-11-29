@@ -20,8 +20,9 @@ namespace InventoryManagementSystemJQuery.Controllers
 
         public IActionResult Index()
         {
-            List<Item> Items = _context.Items.ToList();
-            return View(Items);
+            //List<Item> Items = _context.Items.ToList();
+            //return View(Items);
+            return View();
         }
 
         public async Task<IActionResult> AddOrEdit(int id = 0)

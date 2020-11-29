@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using InventoryManagementSystemJQuery.Models;
+using InventoryManagementSystemJQuery.Models.ApiBodyModels;
 using InventoryManagementSystemJQuery.Models.ApiModels;
+using InventoryManagementSystemJQuery.Models.Dtos;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace InventoryManagementSystemJQuery.Controllers.Api
 {
@@ -28,55 +31,69 @@ namespace InventoryManagementSystemJQuery.Controllers.Api
         }
 
         [HttpPost("add")]
-        public IActionResult AddItem([FromBody]ItemApiModel item)
+        public IActionResult AddItem([FromBody] ItemBody body, [FromQuery] int locationId)
         {
-            if(item != null)
+            if(body != null)
             {
+                var location = _context.Locations.Include(l => l.Items).SingleOrDefault(l => l.LocationId == locationId);
+
                 Item newItem = new Item
                 {
-                    ItemName = item.ItemName,
-                    ItemDesc = item.ItemDesc,
-                    Quantity = item.Quantity,
+                    ItemName = body.ItemName,
+                    ItemDesc = body.ItemDesc,
+                    Quantity = body.ItemQuantity,
                     DateTimeAdded = DateTime.Now
                 };
-                _context.Items.Add(newItem);
+
+                location.Items.Add(newItem);
                 _context.SaveChanges();
 
-                return Ok(newItem);
+                NewItemResultDto itemDto = new NewItemResultDto
+                {
+                    ItemId = newItem.ItemId,
+                    ItemDesc = newItem.ItemDesc,
+                    ItemName = newItem.ItemName,
+                    DateTimeAdded = newItem.DateTimeAdded,
+                    Quantity = newItem.Quantity,
+                    LocationId = location.LocationId,
+                    LocationName = location.LocationName
+                };
+
+                return Ok(itemDto);
             }
 
             return BadRequest("No item data was sent");
         }
 
-        [HttpPut("edit")]
-        public IActionResult EditItem([FromBody]ItemApiModel item, [FromQuery] int itemId)
+        [HttpPut("update")]
+        public IActionResult UpdateItem([FromBody] ItemBody body, [FromQuery] int itemId)
         {
-            if (item != null && itemId != 0)
+            if (body != null && itemId != 0)
             {
-                Item itemInDb = _context.Items.Single(i => i.ItemId == itemId);
+                Item itemInDb = _context.Items.SingleOrDefault(i => i.ItemId == itemId);
                 if(itemInDb == null)
                 {
                     return NotFound();
                 }
-                itemInDb.ItemName = item.ItemName;
-                itemInDb.ItemDesc = item.ItemDesc;
-                itemInDb.Quantity = item.Quantity;
-  
+                itemInDb.ItemName = body.ItemName;
+                itemInDb.ItemDesc = body.ItemDesc;
+                itemInDb.Quantity = body.ItemQuantity;
+
                 _context.SaveChanges();
 
                 return Ok(itemInDb);
             }
 
-            return NotFound();
+            return BadRequest("No item data was sent");
         }
 
-        [HttpDelete("delete")]
-        public IActionResult DeleteItem([FromQuery]int itemId)
+        [HttpDelete("del")]
+        public IActionResult DeleteItem([FromQuery] int itemId)
         {
             if(itemId != 0)
             {
-                Item itemInDb = _context.Items.Single(i => i.ItemId == itemId);
-                if (itemInDb == null)
+                Item itemInDb = _context.Items.SingleOrDefault(i => i.ItemId == itemId);
+                if(itemInDb == null)
                 {
                     return NotFound();
                 }
@@ -84,7 +101,9 @@ namespace InventoryManagementSystemJQuery.Controllers.Api
                 _context.SaveChanges();
                 return Ok();
             }
-            return NotFound();
+
+            return BadRequest("No item ID was sent");
         }
+
     }
 }

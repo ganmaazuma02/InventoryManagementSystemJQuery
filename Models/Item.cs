@@ -30,5 +30,10 @@ namespace InventoryManagementSystemJQuery.Models
         [DisplayName("Date & Time Added")]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime DateTimeAdded { get; set; }
+
+        public int LocationId { get; set; }
+
+        [ForeignKey(nameof(LocationId))]
+        public Location ItemLocation { get; set; }
     }
 }
